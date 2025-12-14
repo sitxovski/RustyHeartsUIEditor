@@ -96,7 +96,7 @@ EDIT/
 Free to use with attribution.
 
 ```
-Copyright (c) 2024
+Copyright sitxovski (c) 2022
 
 Permission is granted to use, copy, modify, and distribute this software 
 by any person for any purpose, provided that this copyright notice is retained.
@@ -105,5 +105,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 ```
 
 ## Authors
-
+@IUoffice
 - Development: Rusty Hearts Community
