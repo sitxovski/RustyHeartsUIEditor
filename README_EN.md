@@ -4,7 +4,7 @@
 
 Visual UI editor for the game Rusty Hearts. Allows viewing and editing game interfaces with translation support.
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot1.png)
 
 ## Features
 
