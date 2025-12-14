@@ -96,7 +96,7 @@ EDIT/
 Свободное использование с сохранением авторства.
 
 ```
-Copyright (c) 2024
+Copyright sitxovski (c) 2025
 
 Разрешается использование, копирование, модификация и распространение 
 данного программного обеспечения любым лицом в любых целях при условии 
@@ -106,5 +106,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 ```
 
 ## Авторы
-
+@IUOffice
 - Разработка: Rusty Hearts Community
