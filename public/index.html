@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rusty Hearts UI Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Rusty Hearts UI Editor</h1>
+                <span class="version">v1.0</span>
+            </div>
+            <div class="header-center">
+                <select id="windowSelect" class="window-select">
+                    <option value="" data-i18n="selectWindow">-- Выберите окно --</option>
+                </select>
+                <button id="reloadBtn" class="btn btn-secondary" data-i18n-title="reload" title="Reload">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="header-right">
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+                    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+                </div>
+                <button id="saveBtn" class="btn btn-primary" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                        <polyline points="17,21 17,13 7,13 7,21"/>
+                        <polyline points="7,3 7,8 15,8"/>
+                    </svg>
+                    <span data-i18n="save">Сохранить</span>
+                </button>
+                <button id="exportBtn" class="btn btn-secondary" data-i18n="export">Экспорт</button>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <!-- Left Panel - Controls List -->
+            <aside class="panel panel-left">
+                <div class="panel-header">
+                    <h2 data-i18n="elements">Элементы</h2>
+                    <input type="text" id="controlSearch" data-i18n-placeholder="search" placeholder="Поиск..." class="search-input">
+                </div>
+                <div class="panel-content">
+                    <div id="controlsList" class="controls-list"></div>
+                </div>
+            </aside>
+
+            <!-- Center - Canvas -->
+            <main class="canvas-container">
+                <div class="canvas-toolbar">
+                    <div class="zoom-controls">
+                        <button id="zoomOut" class="btn-icon" data-i18n-title="zoomOut" title="Zoom out">−</button>
+                        <span id="zoomLevel">100%</span>
+                        <button id="zoomIn" class="btn-icon" data-i18n-title="zoomIn" title="Zoom in">+</button>
+                        <button id="zoomFit" class="btn-icon" data-i18n-title="zoomFit" title="Fit">⊡</button>
+                    </div>
+                    <div class="view-options">
+                        <label><input type="checkbox" id="showGrid" checked> <span data-i18n="grid">Сетка</span></label>
+                        <label><input type="checkbox" id="showBounds" checked> <span data-i18n="bounds">Границы</span></label>
+                        <label><input type="checkbox" id="showOverflow"> <span data-i18n="overflow">Переполнение</span></label>
+                    </div>
+                </div>
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <div class="canvas" id="canvas">
+                        <div class="window-preview" id="windowPreview"></div>
+                    </div>
+                </div>
+                <div class="canvas-info">
+                    <span id="windowInfo" data-i18n="windowNotLoaded">Окно не загружено</span>
+                    <span id="mousePos">X: 0, Y: 0</span>
+                </div>
+            </main>
+
+            <!-- Right Panel - Properties -->
+            <aside class="panel panel-right">
+                <div class="panel-tabs">
+                    <button class="tab-btn active" data-tab="properties" data-i18n="properties">Свойства</button>
+                    <button class="tab-btn" data-tab="translation" data-i18n="translation">Перевод</button>
+                    <button class="tab-btn" data-tab="window" data-i18n="window">Окно</button>
+                </div>
+                
+                <div class="tab-content active" id="tab-properties">
+                    <div id="propertiesPanel" class="properties-panel">
+                        <p class="placeholder" data-i18n="selectElement">Выберите элемент для редактирования</p>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="tab-translation">
+                    <div class="translation-panel">
+                        <div class="form-group">
+                            <label data-i18n="stringId">ID строки</label>
+                            <input type="text" id="transId" readonly class="input-readonly">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="currentText">Текущий текст</label>
+                            <textarea id="transText" rows="3" data-i18n-placeholder="translationText" placeholder="Translation text..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="widthPreview">Предпросмотр ширины</label>
+                            <div class="width-preview">
+                                <div class="width-bar">
+                                    <div class="width-fill" id="widthFill"></div>
+                                </div>
+                                <span id="widthInfo">0 / 0 px</span>
+                            </div>
+                        </div>
+                        <button id="saveTransBtn" class="btn btn-primary btn-full" data-i18n="saveTranslation">Сохранить перевод</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="tab-window">
+                    <div class="window-panel">
+                        <div class="form-group">
+                            <label data-i18n="windowId">ID окна</label>
+                            <input type="text" id="windowId" readonly class="input-readonly">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="size">Размер</label>
+                            <div class="input-row">
+                                <input type="number" id="windowWidth" data-i18n-placeholder="width" placeholder="Width">
+                                <span>×</span>
+                                <input type="number" id="windowHeight" data-i18n-placeholder="height" placeholder="Height">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="position">Позиция</label>
+                            <div class="input-row">
+                                <input type="number" id="windowX" placeholder="X">
+                                <input type="number" id="windowY" placeholder="Y">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span id="statusText" data-i18n="ready">Ready</span>
+            </div>
+            <div class="status-right">
+                <span id="translationCount"></span>
+                <span id="spriteCount"></span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Translation Search Modal -->
+    <div class="modal" id="translationModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 data-i18n="searchTranslation">Search translation</h3>
+                <button class="modal-close" onclick="closeModal('translationModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="translationSearch" data-i18n-placeholder="searchByIdOrText" placeholder="Search by ID or text..." class="search-input-large">
+                <div id="translationResults" class="translation-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
